@@ -7,11 +7,11 @@ coloredlogs.install(level="DEBUG", logger=logger)
 
 
 def test_apply_logger():
-    from my_utilies.decorate_decorator import apply_logger
+    from my_utilies import apply_dubug_log
 
-    coloredlogs.install(level="DEBUG", logger=logging.getLogger("my_utilies.decorate_decorator"))
+    coloredlogs.install(level="DEBUG", logger=logging.getLogger("my_utilies"))
 
-    @apply_logger()
+    @apply_dubug_log(exclude=[])
     class A:
         def a(self):
             pass
