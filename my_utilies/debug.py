@@ -9,9 +9,9 @@ logger = logging.getLogger(__name__)
 
 
 # メソッドの開始、終了、プロセス時間を表示するデコレータ
-def apply_logger(exclude=[]):
+def apply_dubug_log(exclude=[]):
     # メソッドに対して適用されるデコレータ
-    def _logger(func):
+    def debug_log(func):
         @wraps(func)
         def inner_func(*args, **kwargs):
             # 前処理
@@ -34,7 +34,7 @@ def apply_logger(exclude=[]):
             if name.startswith("__"):
                 continue
             if callable(getattr(cls, name)) and not name in exclude:
-                setattr(cls, name, _logger(fn))
+                setattr(cls, name, debug_log(fn))
         return cls
 
     return decorate
