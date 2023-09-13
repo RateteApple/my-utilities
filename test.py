@@ -1,23 +1,28 @@
 from __future__ import annotations
 import logging, coloredlogs
-from decorate_decorator import apply_logger
+
 
 logger = logging.getLogger(__name__)
-apply_names = ["__main__", "decorate_decorator"]
-for logger_name in apply_names:
-    coloredlogs.install(level="DEBUG", logger=logging.getLogger(logger_name))
+coloredlogs.install(level="DEBUG", logger=logger)
 
 
-@apply_logger()
-class A:
-    def a(self):
-        pass
+def test_apply_logger():
+    from my_utilies.decorate_decorator import apply_logger
 
-    def b(self):
-        pass
+    coloredlogs.install(level="DEBUG", logger=logging.getLogger("my_utilies.decorate_decorator"))
 
+    @apply_logger()
+    class A:
+        def a(self):
+            pass
 
-if __name__ == "__main__":
+        def b(self):
+            pass
+
     a = A()
     a.a()
     a.b()
+
+
+if __name__ == "__main__":
+    test_apply_logger()
