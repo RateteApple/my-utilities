@@ -25,7 +25,7 @@ def output_debug(func, logger: logging.Logger):
     @wraps(func)
     def wrapper(*args, **kwargs):
         # 前処理
-        logger.debug(f"START: {func.__name__}")  # 開始を通知
+        logger.debug(f"START:{func.__name__}")  # 開始を通知
         start_time = time.time()
 
         # 対象の関数を実行
@@ -33,7 +33,7 @@ def output_debug(func, logger: logging.Logger):
 
         # 後処理
         end_time = time.time()
-        logger.debug(f"END:   {func.__name__} PROCESS TIME: {end_time - start_time:.3f} sec")  # 終了を通知
+        logger.debug(f"END:  {func.__name__}   {end_time - start_time:.3f} sec")  # 終了を通知
 
         # 結果を返す
         return result
@@ -57,7 +57,7 @@ def apply_output_debug(logger: logging.Logger, exclude: list = []):
         @wraps(func)
         def wrapper(*args, **kwargs):
             # 前処理
-            logger.debug(f"START: {func.__name__}")  # 開始を通知
+            logger.debug(f"START:{func.__name__}")  # 開始を通知
             start_time = time.time()
 
             # 対象の関数を実行
@@ -65,7 +65,7 @@ def apply_output_debug(logger: logging.Logger, exclude: list = []):
 
             # 後処理
             end_time = time.time()
-            logger.debug(f"END:   {func.__name__} PROCESS TIME: {end_time - start_time:.3f} sec")  # 終了を通知
+            logger.debug(f"END:  {func.__name__}   {end_time - start_time:.3f} sec")  # 終了を通知
 
             # 結果を返す
             return result
