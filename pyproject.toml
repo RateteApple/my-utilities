@@ -2,3 +2,6 @@
 name = "my_utilities"
 version = "0.3.2"
 description = "自分用の色々な処理をまとめたやつ"
+dynamic = ["dependencies"]
+[tool.setuptools.dynamic]
+dependencies = {file = ["requirements.txt"]}
