@@ -1,5 +1,3 @@
-# coding:utf-8
-
 import asyncio
 from googleapiclient.discovery import build
 from google.oauth2 import service_account
