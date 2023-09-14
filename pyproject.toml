@@ -1,4 +1,4 @@
 [project]
 name = "my_utilities"
-version = "0.2.0"
+version = "0.3.0"
 description = "自分用の色々な処理をまとめたやつ"
