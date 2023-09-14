@@ -33,7 +33,7 @@ def output_debug(func, logger: logging.Logger):
 
         # 後処理
         end_time = time.time()
-        logger.debug(f"END: {func.__name__}")  # 終了を通知
+        logger.debug(f"END:   {func.__name__}")  # 終了を通知
         logger.debug(f"PROCESS TIME: {end_time - start_time:.3f} sec")  # プロセス時間を表示
 
         # 結果を返す
@@ -66,7 +66,7 @@ def apply_output_debug(logger: logging.Logger, exclude: list = []):
 
             # 後処理
             end_time = time.time()
-            logger.debug(f"END: {func.__name__}")  # 終了を通知
+            logger.debug(f"END:   {func.__name__}")  # 終了を通知
             logger.debug(f"PROCESS TIME: {end_time - start_time:.3f} sec")  # プロセス時間を表示
 
             # 結果を返す
