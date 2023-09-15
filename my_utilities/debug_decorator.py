@@ -3,73 +3,47 @@ import inspect
 import logging
 import time
 
-default_logger = logging.getLogger(__name__)
+# FIXME: inspectモジュールを使わない方が処理が軽いかも
 
 
-# 引数付きデコレータを作成するデコレータ
-def paramdeco(func):
-    # from:https://qiita.com/nshinya/items/b6746a0c07e9e20389e8
-    @wraps(func)
-    def param(*args, **kwargs):
-        def wrapper(f):
-            return func(f, *args, **kwargs)
+# 実行時間を計測するデコレータ
+def execute_time(exclude: tuple = None):
+    def decorate(target):
+        # クラスに対してはメソッドをデコレートする
+        if inspect.isclass(target):
+            return decorate_class(target)
+        # 関数に対してはそのままデコレートする
+        elif inspect.isfunction(target):
+            return decorate_method(target)
 
-        return wrapper
-
-    return param
-
-
-# デバッグログを出力する関数デコレータ
-@paramdeco
-def output_debug(func, logger: logging.Logger = default_logger):
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        # 前処理
-        logger.debug(f"START:{func.__name__}")  # 開始を通知
-        start_time = time.time()
-
-        # 対象の関数を実行
-        result = func(*args, **kwargs)
-
-        # 後処理
-        end_time = time.time()
-        logger.debug(f"END:  {func.__name__}   {end_time - start_time:.3f} sec")  # 終了を通知
-
-        # 結果を返す
-        return result
-
-    return wrapper
-
-
-# デバッグデコレータをメソッドに適用するクラスデコレータ
-def apply_output_debug(logger: logging.Logger = default_logger, exclude=()):
-    # デコレータを適用する処理
-    def decorate(cls):
-        for name, fn in inspect.getmembers(cls):
-            if name.startswith("__"):  # マジックメソッドは除外
-                continue
+    # クラスデコレータ
+    def decorate_class(target):
+        for name, func in inspect.getmembers(target):
+            # マジックメソッドとプライベートメソッドは除外
             if name[:2] == "__":
                 continue
-            if callable(getattr(cls, name)) and not name in exclude:  # excludeに指定されたメソッド以外に適用
-                setattr(cls, name, _output_debug(fn))
-        return cls
+            # excludeに指定されたメソッドは除外
+            if name in exclude:
+                continue
+            # メソッドの場合はデコレータを適用
+            if callable(getattr(target, name)):
+                setattr(target, name, decorate_method(func))
+        return target
 
-    # デバッグログを出力する関数デコレータ
-    def _output_debug(func):
+    # 関数デコレータ
+    def decorate_method(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
+            # ロガーの取得
+            logger = logging.getLogger(func.__module__)
             # 前処理
             logger.debug(f"START:{func.__name__}")  # 開始を通知
             start_time = time.time()
-
             # 対象の関数を実行
             result = func(*args, **kwargs)
-
             # 後処理
             end_time = time.time()
             logger.debug(f"END:  {func.__name__}   {end_time - start_time:.3f} sec")  # 終了を通知
-
-            # 結果を返す
             return result
 
         return wrapper
