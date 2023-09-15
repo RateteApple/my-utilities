@@ -1,7 +1,11 @@
 from functools import wraps
 import inspect
-import logging
+import logging, coloredlogs
 import time
+
+logger = logging.getLogger(__name__)
+fmt = "%(asctime)s %(module)s %(funcName)s %(levelname)s %(message)s"
+coloredlogs.install(level="DEBUG", logger=logger, fmt=fmt)
 
 
 # 引数付きデコレータを作成するデコレータ
@@ -19,7 +23,7 @@ def paramdeco(func):
 
 # デバッグログを出力する関数デコレータ
 @paramdeco
-def output_debug(func, logger: logging.Logger):
+def output_debug(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
         # 前処理
@@ -40,7 +44,7 @@ def output_debug(func, logger: logging.Logger):
 
 
 # デバッグデコレータをメソッドに適用するクラスデコレータ
-def apply_output_debug(logger: logging.Logger, exclude: list = []):
+def apply_output_debug(exclude: tuple = ()):
     # デコレータを適用する処理
     def decorate(cls):
         for name, fn in inspect.getmembers(cls):
