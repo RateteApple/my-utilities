@@ -1,11 +1,9 @@
 from functools import wraps
 import inspect
-import logging, coloredlogs
+import logging
 import time
 
-logger = logging.getLogger(__name__)
-fmt = "%(asctime)s %(module)s %(funcName)s %(levelname)s %(message)s"
-coloredlogs.install(level="DEBUG", logger=logger, fmt=fmt)
+default_logger = logging.getLogger(__name__)
 
 
 # 引数付きデコレータを作成するデコレータ
@@ -23,7 +21,7 @@ def paramdeco(func):
 
 # デバッグログを出力する関数デコレータ
 @paramdeco
-def output_debug(func):
+def output_debug(func, logger: logging.Logger = default_logger):
     @wraps(func)
     def wrapper(*args, **kwargs):
         # 前処理
@@ -44,11 +42,13 @@ def output_debug(func):
 
 
 # デバッグデコレータをメソッドに適用するクラスデコレータ
-def apply_output_debug(exclude: tuple = ()):
+def apply_output_debug(logger: logging.Logger = default_logger, exclude=()):
     # デコレータを適用する処理
     def decorate(cls):
         for name, fn in inspect.getmembers(cls):
             if name.startswith("__"):  # マジックメソッドは除外
+                continue
+            if name[:2] == "__":
                 continue
             if callable(getattr(cls, name)) and not name in exclude:  # excludeに指定されたメソッド以外に適用
                 setattr(cls, name, _output_debug(fn))
