@@ -1,6 +1,6 @@
 [project]
 name = "my_utilities"
-version = "0.6.0"
+version = "0.7.0"
 description = "自分用の色々な処理をまとめたやつ"
 dynamic = ["dependencies"]
 [tool.setuptools.dynamic]

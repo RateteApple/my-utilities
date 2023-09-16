@@ -7,7 +7,7 @@ import time
 
 
 # 実行時間を計測するデコレータ
-def execute_time(exclude: tuple = None):
+def execute_time(exclude: tuple = ()):
     def decorate(target):
         # クラスに対してはメソッドをデコレートする
         if inspect.isclass(target):
