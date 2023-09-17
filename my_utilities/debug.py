@@ -17,21 +17,21 @@ def execute_time(exclude: tuple = ()):
             return decorate_method(target)
 
     # クラスデコレータ
-    def decorate_class(target):
-        for name, func in inspect.getmembers(target):
-            # マジックメソッドとプライベートメソッドは除外
+    def decorate_class(cls):
+        for name, func in inspect.getmembers(cls):
+            # メソッドに絞り込む
+            if not inspect.isfunction(func):
+                continue
+            # マジックメソッドやプライベートメソッドは除外
             if name[:2] == "__":
                 continue
             # excludeに指定されたメソッドは除外
             if name in exclude:
                 continue
-            # メソッドの場合はデコレータを適用
-            if callable(getattr(target, name)):
-                # プライベートメソッドは除外
-                if name[:1] == "_":
-                    continue
-                setattr(target, name, decorate_method(func))
-        return target
+
+            # メソッドをデコレート
+            setattr(cls, name, decorate_method(func))
+        return cls
 
     # 関数デコレータ
     def decorate_method(func):
