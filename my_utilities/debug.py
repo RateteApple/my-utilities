@@ -27,6 +27,9 @@ def execute_time(exclude: tuple = ()):
                 continue
             # メソッドの場合はデコレータを適用
             if callable(getattr(target, name)):
+                # プライベートメソッドは除外
+                if name[:1] == "_":
+                    continue
                 setattr(target, name, decorate_method(func))
         return target
 
