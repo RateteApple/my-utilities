@@ -23,7 +23,7 @@ def execute_time(exclude: tuple = ()):
             if not inspect.isfunction(func):
                 continue
             # マジックメソッドやプライベートメソッドは除外
-            if name[:2] == "__":
+            if name[:1] == "__":
                 continue
             # excludeに指定されたメソッドは除外
             if name in exclude:
