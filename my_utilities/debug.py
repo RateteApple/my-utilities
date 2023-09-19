@@ -7,7 +7,7 @@ import time
 
 
 # 実行時間を計測するデコレータ
-def execute_time(exclude: tuple = ()):
+def execute_time(exclude: tuple = (), ignore_magic: bool = True, ignore_private: bool = True):
     def decorate(target):
         # クラスに対してはメソッドをデコレートする
         if inspect.isclass(target):
@@ -22,8 +22,11 @@ def execute_time(exclude: tuple = ()):
             # メソッドに絞り込む
             if not inspect.isfunction(func):
                 continue
-            # マジックメソッドやプライベートメソッドは除外
-            if name[:1] == "_":
+            # マジックメソッドは除外
+            if name[:2] == "__" and name[-2:] == "__" and ignore_magic:
+                continue
+            # プライベートメソッドは除外
+            if name[:1] == "_" and ignore_private:
                 continue
             # excludeに指定されたメソッドは除外
             if name in exclude:
